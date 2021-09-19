@@ -11,10 +11,10 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -55,17 +55,19 @@ public class SecretDetectService {
         return lastScanResult.get(localPath);
     }
 
-
     private Optional<SecretDetect> detectSecretInFile(File file) {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (FileInputStream inputStream = new FileInputStream(file);
+             Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
 
             SecretDetect secretDetect = new SecretDetect();
             secretDetect.setFileName(file.getName());
 
             String line;
 
-            for (int lineNumber = 1; (line = reader.readLine()) != null; lineNumber ++) {
+            for (int lineNumber = 1; scanner.hasNextLine(); lineNumber++) {
+
+                line = scanner.nextLine();
 
                 if (line.matches(ACCESS_KEY_PATTERN)) {
 
@@ -73,7 +75,7 @@ public class SecretDetectService {
 
                     for (int j = lineNumber + 1; j <= lineNumber + 3; j++) {
 
-                        line = reader.readLine();
+                        line = scanner.nextLine();
 
                         if (line.matches(SECRET_KEY_PATTERN)) {
                             secretDetect.setSecretKeyLine(j);
