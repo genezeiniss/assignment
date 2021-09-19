@@ -1,8 +1,9 @@
 package com.genezeiniss.assignment.rest.controller;
 
 import com.genezeiniss.assignment.domain.SecretDetect;
-import com.genezeiniss.assignment.rest.model.SecretDetectResponse;
 import com.genezeiniss.assignment.rest.model.mapper.SecretDetectModelMapper;
+import com.genezeiniss.assignment.rest.model.request.SecretDetectRequest;
+import com.genezeiniss.assignment.rest.model.response.SecretDetectResponse;
 import com.genezeiniss.assignment.service.SecretDetectService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +23,8 @@ public class SecretDetectController {
     private final SecretDetectModelMapper secretDetectModelMapper;
 
     @PostMapping
-    public List<SecretDetectResponse> scanFilesInPath(@RequestBody String localPath){
-        List<SecretDetect> secretDetects = secretDetectService.scanFiles(localPath);
+    public List<SecretDetectResponse> scanFilesInPath(@RequestBody SecretDetectRequest secretDetectRequest) {
+        List<SecretDetect> secretDetects = secretDetectService.scanFiles(secretDetectRequest.getLocalPath());
         return secretDetects.stream().map(secretDetectModelMapper::mapSecretDetectToResponse).collect(Collectors.toList());
     }
 }

@@ -31,15 +31,16 @@ public class SecretDetectService {
     private Map<String, Instant> scanRunMap = new HashMap<>();
     private Map<String, List<SecretDetect>> lastScanResult = new HashMap<>();
 
-    // todo: create patterns
-    private final String ACCESS_KEY_PATTERN = "AccessKeyId";
-    private final String SECRET_KEY_PATTERN = "SecretAccessKey";
+    // todo: the hardcoded string should be followed by non-empty string
+    private final String ACCESS_KEY_PATTERN = "(?s).*\\bAccessKeyId\\b.*";
+    private final String SECRET_KEY_PATTERN = "(?s).*\\bSecretAccessKey\\b.*";
 
     @Synchronized
     public List<SecretDetect> scanFiles(String localPath) {
 
         if (shouldRunScan(localPath)) {
-            log.info(String.format("path %s wasn't scanned in last %s seconds. Is about to perform path scan", localPath, maxSecondsUntilScanExpired));
+            log.info(String.format("path %s wasn't scanned in last %s seconds. Is about to perform path scan", localPath,
+                    maxSecondsUntilScanExpired));
             File directoryPath = new File(localPath);
             File[] filesList = Objects.requireNonNull(directoryPath.listFiles());
             List<SecretDetect> secretDetectList = new ArrayList<>();
@@ -64,15 +65,15 @@ public class SecretDetectService {
 
             for (int lineNumber = 1; (line = reader.readLine()) != null; lineNumber ++) {
 
-                if (line.contains(ACCESS_KEY_PATTERN)) {
+                if (line.matches(ACCESS_KEY_PATTERN)) {
 
                     secretDetect.setAccessKeyLine(lineNumber);
 
-                    for (int j = lineNumber + 1; j <= lineNumber + 3; j ++) {
+                    for (int j = lineNumber + 1; j <= lineNumber + 3; j++) {
 
                         line = reader.readLine();
 
-                        if (line.contains(SECRET_KEY_PATTERN)) {
+                        if (line.matches(SECRET_KEY_PATTERN)) {
                             secretDetect.setSecretKeyLine(j);
                             return Optional.of(secretDetect);
                         }

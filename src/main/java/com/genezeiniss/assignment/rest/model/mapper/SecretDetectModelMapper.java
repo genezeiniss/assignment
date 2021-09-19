@@ -1,7 +1,7 @@
 package com.genezeiniss.assignment.rest.model.mapper;
 
 import com.genezeiniss.assignment.domain.SecretDetect;
-import com.genezeiniss.assignment.rest.model.SecretDetectResponse;
+import com.genezeiniss.assignment.rest.model.response.SecretDetectResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

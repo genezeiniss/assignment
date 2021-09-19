@@ -1,4 +1,4 @@
-package com.genezeiniss.assignment.rest.model;
+package com.genezeiniss.assignment.rest.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
