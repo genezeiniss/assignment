@@ -6,7 +6,10 @@ import com.genezeiniss.file_scanner.rest.model.request.SecretDetectRequest;
 import com.genezeiniss.file_scanner.rest.model.response.SecretDetectResponse;
 import com.genezeiniss.file_scanner.service.SecretDetectService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,10 +26,5 @@ public class SecretDetectController {
     public List<SecretDetectResponse> scanFilesInPath(@RequestBody SecretDetectRequest secretDetectRequest) {
         List<SecretDetect> secretDetects = secretDetectService.scanFiles(secretDetectRequest.getLocalPath());
         return secretDetects.stream().map(secretDetectModelMapper::mapSecretDetectToResponse).collect(Collectors.toList());
-    }
-
-    @GetMapping("/")
-    public String index() {
-        return "Greetings from Spring Boot!";
     }
 }
