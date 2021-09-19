@@ -1,4 +1,4 @@
-package com.genezeiniss.assignment.service
+package com.genezeiniss.file_scanner.service
 
 import spock.lang.Specification
 

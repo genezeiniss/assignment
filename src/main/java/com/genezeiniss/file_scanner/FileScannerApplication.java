@@ -1,4 +1,4 @@
-package com.genezeiniss.assignment;
+package com.genezeiniss.file_scanner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

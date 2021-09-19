@@ -1,6 +1,6 @@
-package com.genezeiniss.assignment.service;
+package com.genezeiniss.file_scanner.service;
 
-import com.genezeiniss.assignment.domain.SecretDetect;
+import com.genezeiniss.file_scanner.domain.SecretDetect;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;

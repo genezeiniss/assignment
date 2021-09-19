@@ -1,4 +1,4 @@
-package com.genezeiniss.assignment.rest.model.request;
+package com.genezeiniss.file_scanner.rest.model.request;
 
 import lombok.Value;
 
