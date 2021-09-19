@@ -92,7 +92,7 @@ public class SecretDetectService {
         if (scanRunMap.get(localPath) == null) { //first time service is up
             return true;
         }
-        return Duration.between(scanRunMap.get(localPath), Instant.now()).getSeconds() < maxSecondsUntilScanExpired;
+        return Duration.between(scanRunMap.get(localPath), Instant.now()).getSeconds() >= maxSecondsUntilScanExpired;
     }
 
     private void storeLastScanResult(String localPath, List<SecretDetect> secretDetects) {
