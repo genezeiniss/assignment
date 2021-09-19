@@ -82,7 +82,7 @@ public class SecretDetectService {
                 }
             }
         } catch (IOException exception) {
-            exception.printStackTrace();
+           throw new RuntimeException("something went wrong", exception);
         }
 
         return Optional.empty();
