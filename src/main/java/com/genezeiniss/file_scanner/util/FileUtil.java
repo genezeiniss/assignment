@@ -10,8 +10,6 @@ public class FileUtil {
     // todo: extend run time exception - add http error code: 400
     public static Stream<File> getFilesOrElseThrowException(String localPath) {
 
-        //File directoryPath = new File(localPath);
-
         File[] filesList = Optional.of(new File(localPath))
                 .map(File::listFiles)
                 .orElseThrow(() ->
