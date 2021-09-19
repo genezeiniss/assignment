@@ -1,6 +1,7 @@
 package com.genezeiniss.file_scanner.service;
 
 import com.genezeiniss.file_scanner.domain.SecretDetect;
+import com.genezeiniss.file_scanner.util.FileUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
@@ -26,7 +27,7 @@ import java.util.*;
 public class SecretDetectService {
 
     @Value("${secret-detect.max-seconds-until-scan-expired:3600}")
-    private int maxSecondsUntilScanExpired;
+    private int scanValidityTime;
 
     private Map<String, Instant> scanRunMap = new HashMap<>();
     private Map<String, List<SecretDetect>> lastScanResult = new HashMap<>();
@@ -39,13 +40,13 @@ public class SecretDetectService {
     public List<SecretDetect> scanFiles(String localPath) {
 
         if (shouldRunScan(localPath)) {
-            log.info(String.format("path %s wasn't scanned in last %s seconds. Is about to perform path scan", localPath,
-                    maxSecondsUntilScanExpired));
-            File directoryPath = new File(localPath);
-            File[] filesList = Objects.requireNonNull(directoryPath.listFiles());
+
+            log.info(
+                    String.format("path %s wasn't scanned in last %s seconds. Is about to perform path scan", localPath, scanValidityTime));
+
             List<SecretDetect> secretDetectList = new ArrayList<>();
 
-            Arrays.stream(filesList)
+            FileUtil.getFilesOrElseThrowException(localPath)
                     .forEach(file -> detectSecretInFile(file).ifPresent(secretDetectList::add));
 
             storeLastScanResult(localPath, secretDetectList);
@@ -53,6 +54,7 @@ public class SecretDetectService {
 
         return lastScanResult.get(localPath);
     }
+
 
     private Optional<SecretDetect> detectSecretInFile(File file) {
 
@@ -92,7 +94,7 @@ public class SecretDetectService {
         if (scanRunMap.get(localPath) == null) { //first time service is up
             return true;
         }
-        return Duration.between(scanRunMap.get(localPath), Instant.now()).getSeconds() >= maxSecondsUntilScanExpired;
+        return Duration.between(scanRunMap.get(localPath), Instant.now()).getSeconds() >= scanValidityTime;
     }
 
     private void storeLastScanResult(String localPath, List<SecretDetect> secretDetects) {

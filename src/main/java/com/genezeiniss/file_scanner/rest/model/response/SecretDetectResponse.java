@@ -1,15 +1,15 @@
 package com.genezeiniss.file_scanner.rest.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class SecretDetectResponse {
 
     @JsonProperty("filename")
-    String fileName;
+    private String fileName;
     @JsonProperty("AKI_line")
-    int accessKeyLine;
+    private int accessKeyLine;
     @JsonProperty("SAK_line")
-    int secretKeyLine;
+    private int secretKeyLine;
 }

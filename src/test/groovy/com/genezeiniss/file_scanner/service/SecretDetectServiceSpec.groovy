@@ -1,6 +1,8 @@
 package com.genezeiniss.file_scanner.service
 
+import spock.lang.Ignore
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class SecretDetectServiceSpec extends Specification {
 
@@ -8,15 +10,19 @@ class SecretDetectServiceSpec extends Specification {
 
     def setup() {
         secretDetectService = new SecretDetectService()
-        secretDetectService.maxSecondsUntilScanExpired = 3600
+        secretDetectService.scanValidityTime = 3600
     }
 
-    def "search file"() {
+    @Ignore("test looking for local folder")
+    def "scan files - local path contains files"() {
         when:
         def firstCallResult = secretDetectService.scanFiles("/Users/genezeiniss/Desktop/tmp/")
         def secondCallResult = secretDetectService.scanFiles("/Users/genezeiniss/Desktop/tmp/")
 
-        then: "first call is about to perform scan"
+        then: "no exception expected to be thrown"
+        noExceptionThrown()
+
+        and: "first call is about to perform scan"
         assert firstCallResult.size() == 1
         assert firstCallResult.get(0).fileName == "positive_example.py"
         assert firstCallResult.get(0).accessKeyLine == 3
@@ -27,5 +33,19 @@ class SecretDetectServiceSpec extends Specification {
         assert secondCallResult.get(0).fileName == "positive_example.py"
         assert secondCallResult.get(0).accessKeyLine == 3
         assert secondCallResult.get(0).secretKeyLine == 5
+    }
+
+    @Unroll
+    def "scan files - #scenario"() {
+        when:
+        secretDetectService.scanFiles(localPath)
+
+        then: "exception expected to be thrown"
+        thrown(RuntimeException)
+
+        where:
+        scenario              | localPath
+        "folder is not exist" | "/not-exist/"
+        "folder is empty"     | "/Users/genezeiniss/Desktop/empty-folder/"
     }
 }

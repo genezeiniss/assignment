@@ -1,9 +1,9 @@
 package com.genezeiniss.file_scanner.rest.model.request;
 
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class SecretDetectRequest {
 
-    String localPath;
+    private String localPath;
 }
