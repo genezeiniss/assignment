@@ -4,6 +4,7 @@ import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
+@Ignore("test looking for local folder")
 class SecretDetectServiceSpec extends Specification {
 
     SecretDetectService secretDetectService
@@ -13,7 +14,6 @@ class SecretDetectServiceSpec extends Specification {
         secretDetectService.scanValidityTime = 3600
     }
 
-    @Ignore("test looking for local folder")
     def "scan files - local path contains files"() {
         when:
         def firstCallResult = secretDetectService.scanFiles("/Users/genezeiniss/Desktop/tmp/")
